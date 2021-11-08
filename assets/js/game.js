@@ -44,67 +44,78 @@ while (playerInfo.health > 0 && enemy.health > 0) {
   return false;
 }
 
-// fight function (now with parameter for enemy's object holding name, health, and attack values)
-var fight = function(enemy) {  while (playerInfo.health > 0 && enemy.health > 0) {
-  // ask player if they'd like to fight or skip using fightOrSkip function
-  if (fightOrSkip()) {
-    // if true, leave fight by breaking loop
-    break;
-  }
- // fight logic
-    // if player picks "skip" confirm and then stop the loop
-    if (promptFight === "skip" || promptFight === "SKIP") {
-      // confirm player wants to skip
-      var confirmSkip = window.confirm("Are you sure you'd like to quit?");
+var fight = function(enemy) {
+  // keep track of who goes first
+  var isPlayerTurn = true;
 
-      // if yes (true), leave fight
-      if (confirmSkip) {
-        window.alert(playerInfo.name + ' has decided to skip this fight. Goodbye!');
-        // subtract money from playerInfo.money for skipping
-        playerInfo.money = Math.max(0, playerInfo.money - 10);
-        console.log("playerInfo.money", playerInfo.money)
+  // randomly change turn order
+  if (Math.random() > 0.5) {
+    isPlayerTurn = false;
+  }
+
+  while (playerInfo.health > 0 && enemy.health > 0) {
+    if (isPlayerTurn) {
+      // ask player if they'd like to fight or skip using fightOrSkip function
+      if (fightOrSkip()) {
+        // if true, leave fight by breaking loop
         break;
       }
-    }
 
-    // generate random damage value based on player's attack power
-    var damage = randomNumber(playerInfo.attack - 3, playerInfo.attack);
+      var damage = randomNumber(playerInfo.attack - 3, playerInfo.attack);
 
-    enemy.health = Math.max(0, enemy.health - damage);
-    console.log(
-      playerInfo.name + ' attacked ' + enemy.name + '. ' + enemy.name + ' now has ' + enemy.health + ' health remaining.'
-    );
+      // remove enemy's health by subtracting the amount we set in the damage variable
+      enemy.health = Math.max(0, enemy.health - damage);
+      console.log(
+        playerInfo.name +
+          " attacked " +
+          enemy.name +
+          ". " +
+          enemy.name +
+          " now has " +
+          enemy.health +
+          " health remaining."
+      );
 
-    // check enemy's health
-    if (enemy.health <= 0) {
-      window.alert(enemy.name + ' has died!');
+      // check enemy's health
+      if (enemy.health <= 0) {
+        window.alert(enemy.name + " has died!");
 
-      // award player money for winning
-      playerInfo.money = playerInfo.money + 20;
+        // award player money for winning
+        playerInfo.money = playerInfo.money + 20;
 
-      // leave while() loop since enemy is dead
-      break;
+        // leave while() loop since enemy is dead
+        break;
+      } else {
+        window.alert(enemy.name + " still has " + enemy.health + " health left.");
+      }
+      // player gets attacked first
     } else {
-      window.alert(enemy.name + ' still has ' + enemy.health + ' health left.');
+      var damage = randomNumber(enemy.attack - 3, enemy.attack);
+
+      // remove player's health by subtracting the amount we set in the damage variable
+      playerInfo.health = Math.max(0, playerInfo.health - damage);
+      console.log(
+        enemy.name +
+          " attacked " +
+          playerInfo.name +
+          ". " +
+          playerInfo.name +
+          " now has " +
+          playerInfo.health +
+          " health remaining."
+      );
+
+      // check player's health
+      if (playerInfo.health <= 0) {
+        window.alert(playerInfo.name + " has died!");
+        // leave while() loop if player is dead
+        break;
+      } else {
+        window.alert(playerInfo.name + " still has " + playerInfo.health + " health left.");
+      }
     }
-
-    // remove players's health by subtracting the amount set in the enemy.attack variable
-    var damage = randomNumber(enemy.attack - 3, enemy.attack);
-
-    playerInfo.health = Math.max(0, playerInfo.health - damage);
-    
-    console.log(
-      enemy.name + ' attacked ' + playerInfo.name + '. ' + playerInfo.name + ' now has ' + playerInfo.health + ' health remaining.'
-    );
-
-    // check player's health
-    if (playerInfo.health <= 0) {
-      window.alert(playerInfo.name + ' has died!');
-      // leave while() loop if player is dead
-      break;
-    } else {
-      window.alert(playerInfo.name + ' still has ' + playerInfo.health + ' health left.');
-    }
+    // switch turn order for next round
+    isPlayerTurn = !isPlayerTurn;
   }
 };
 
@@ -129,16 +140,6 @@ var startGame = function() {
       // pass the pickedEnemyObj object variable's value into the fight function, where it will assume the value of the enemy parameter
       fight(pickedEnemyObj);
 
-<<<<<<< HEAD
-    // pass the pickedEnemyName variable's value into the fight function, where it will assume the value of the enemyName parameter
-    fight(pickedEnemyName);
-    
-// if we're not at the last enemy in the array
-if (playerhealth > 0 && i < enemyNames.length - 1) {
-  shop();
-}
-
-=======
       // if player is still alive and we're not at the last enemy in the array
       if (playerInfo.health > 0 && i < enemyInfo.length - 1) {
         // ask if player wants to use the store before next round
@@ -155,7 +156,6 @@ if (playerhealth > 0 && i < enemyNames.length - 1) {
       window.alert("You have lost your robot in battle! Game Over!");
       break;
     }
->>>>>>> 941830c0589e4c82fd7178ae5bc449685920f1cf
   }
 
   // after loop ends, we are either out of player.health or enemies to fight, so run the endGame function
@@ -182,12 +182,6 @@ var endGame = function() {
     window.alert('Thank you for playing Robot Gladiators! Come back soon!');
   }
 };
-<<<<<<< HEAD
-var shop = function () {
-  console.log("entered the shop");
-};
-startGame();
-=======
 
 // go to shop between battles function
 var shop = function() {
@@ -291,4 +285,3 @@ console.log(enemyInfo[0]['attack']);
 
 /* RUN GAME */
 startGame();
->>>>>>> 941830c0589e4c82fd7178ae5bc449685920f1cf
